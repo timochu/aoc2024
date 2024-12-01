@@ -1,6 +1,6 @@
 let left, right = 
     System.IO.File.ReadAllLines "day01.txt"
-    |> Array.map (fun l -> int l[..5], int l[8..])
+    |> Array.map (fun line -> int line[..5], int line[8..])
     |> Array.unzip
 
 (Array.sort left, Array.sort right)
