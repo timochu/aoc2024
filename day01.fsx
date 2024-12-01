@@ -4,4 +4,4 @@ let left, right =
     |> Array.unzip
 
 (Array.sort left, Array.sort right) ||> Array.map2 (-) |> Array.sumBy abs |> printfn "Part 1: %A"
-left |> Array.sumBy (fun id -> id * (right |> Array.filter ((=) id) |> Array.length)) |> printfn "Part 2: %A"
+left |> Array.sumBy (fun id -> id * (right |> Array.filter ((=) id)).Length) |> printfn "Part 2: %A"
