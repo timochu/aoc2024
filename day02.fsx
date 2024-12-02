@@ -1,12 +1,13 @@
 open type System.Math
 let rec safe direction report =
-    if Set.count direction > 1 then 0
+    if Set.count direction > 1 then false
     else match report with
-         | [] -> 1
-         | (x,y) :: _ when abs(x-y) > 3 -> 0
-         | (x,y) :: _ when abs(x-y) < 1 -> 0
+         | [] -> true
+         | (x,y) :: _ when abs(x-y) > 3 -> false
+         | (x,y) :: _ when abs(x-y) < 1 -> false
          | (x,y) :: tail -> safe (direction |> Set.add (Sign(x-y))) tail
 
-System.IO.File.ReadAllLines "day02.txt"
-|> Array.sumBy (fun l -> l.Split " " |> Array.map int |> Array.toList |> List.pairwise |> safe Set.empty)
-|> printfn "%A"
+let reports = System.IO.File.ReadAllLines "day02.txt" |> Array.map (fun l -> l.Split " " |> Array.map int |> Array.toList)
+
+reports |> Array.filter (List.pairwise >> safe Set.empty) |> Array.length |> printfn "Part 1: %i"
+reports |> Array.filter (fun r -> [0 .. r.Length-1] |> List.map (fun i -> r |> List.removeAt i) |> List.exists(List.pairwise >> safe Set.empty)) |> Array.length |> printfn "Part 2: %i"
