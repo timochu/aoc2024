@@ -1,15 +1,16 @@
 open System; open type System.Convert
 
 let rec safe direction report =
-    if Set.count direction > 1 then false else
-    match report with
-    | [] -> true
-    | (x, y) :: _ when abs (x - y) > 3 || abs (x - y) < 1 -> false
-    | (x, y) :: tail -> safe (direction + set [Math.Sign(x - y)]) tail
+    match report, direction with
+    | _, d when d |> set |> Set.count > 1 -> false
+    | [], _ -> true
+    | (x, y) :: _, _ when abs (x - y) > 3 -> false
+    | (x, y) :: _, _ when abs (x - y) < 1 -> false
+    | (x, y) :: rest, d -> safe (Math.Sign(x - y) :: d) rest
 
-let permute report = [ for i in 0 .. Seq.length report - 1 -> Seq.removeAt i report ]
+let permute report = [ for i in 0 .. List.length report - 1 -> List.removeAt i report ]
 
-let reports = IO.File.ReadAllLines "day02.txt" |> Seq.map (fun l -> l.Split() |> Seq.map int)
+let reports = [for report in IO.File.ReadAllLines "day02.txt" -> [for level in report.Split() -> int level]]
 
-reports |> Seq.sumBy (Seq.pairwise >> Seq.toList >> safe Set.empty >> ToInt32) |> printfn "Part 1: %i"
-reports |> Seq.sumBy (permute >> Seq.exists (Seq.pairwise >> Seq.toList >> safe Set.empty) >> ToInt32) |> printfn "Part 2: %i"
+reports |> List.sumBy (List.pairwise >> safe [] >> ToInt32) |> printfn "Part 1: %i"
+reports |> List.sumBy (permute >> List.exists (List.pairwise >> safe []) >> ToInt32) |> printfn "Part 2: %i"
