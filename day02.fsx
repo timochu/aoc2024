@@ -2,7 +2,7 @@ open System; open type System.Convert
 
 let rec safe (direction : int Set) report =
     if direction.Count > 1 then false
-    else match report  with
+    else match report with
          | []                             -> true
          | (x, y) :: _ when abs (x-y) > 3 -> false
          | (x, y) :: _ when abs (x-y) < 1 -> false
