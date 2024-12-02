@@ -10,7 +10,7 @@ let rec safe direction report =
 
 let permute report = [ for i in 0 .. List.length report - 1 -> List.removeAt i report ]
 
-let reports = [for report in IO.File.ReadAllLines "day02.txt" -> [for level in report.Split() -> int level]]
+let reports = [ for report in IO.File.ReadAllLines "day02.txt" -> [ for level in report.Split() -> int level ] ]
 
 reports |> List.sumBy (List.pairwise >> safe Set.empty >> ToInt32) |> printfn "Part 1: %i"
 reports |> List.sumBy (permute >> List.exists (List.pairwise >> safe Set.empty) >> ToInt32) |> printfn "Part 2: %i"
