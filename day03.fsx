@@ -4,4 +4,4 @@ let mult = Regex(@"mul\((\d{1,3}),(\d{1,3})\)").Matches >> Seq.sumBy (fun m -> i
 let clean s = Regex(@"don't\(\).*?(do\(\)|$)", RegexOptions.Singleline).Replace(s, "")
 
 File.ReadAllText "day03.txt" |> mult |> printfn "Part 1: %i"
-File.ReadAllText "day03.txt" |> clean |> mult |> printfn "Part 2: %A"
+File.ReadAllText "day03.txt" |> clean |> mult |> printfn "Part 2: %i"
