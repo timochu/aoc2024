@@ -42,14 +42,14 @@ let window2D (size: int) (arr: 'a[][]) : 'a[][][] =
                         |]
                 |]
     |]
-let mas (c : char array) = Regex("(?=(MAS|SAM))").Matches(System.String c).Count
+let mas (c : char array) = Regex("(?=(MAS|SAM))").Matches(System.String c).Count = 1
 
 window2D 3 input 
 |> Array.map (fun f -> 
     [|f |> diagonals ; f |> Array.rev |> diagonals |] 
     |> Array.collect id 
     |> Array.filter (fun x -> Array.length x = 3) 
-    |> Array.forall (fun y -> mas y = 1))
+    |> Array.forall mas)
 |> Array.where id
 |> Array.length
 |> printfn "Part 2: %i"
