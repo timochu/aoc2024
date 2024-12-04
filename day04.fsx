@@ -43,11 +43,10 @@ let window2D (size: int) (arr: 'a[][]) : 'a[][][] =
 |> printfn "Part 1: %i"
 
 window2D 3 input 
-|> Array.map (fun f -> 
+|> Array.where (fun f -> 
     [|f |> diagonals ; f |> Array.rev |> diagonals |] 
     |> Array.collect id 
     |> Array.filter (fun x -> Array.length x = 3) 
     |> Array.forall mas)
-|> Array.where id
 |> Array.length
 |> printfn "Part 2: %i"
