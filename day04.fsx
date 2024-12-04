@@ -41,10 +41,9 @@ let window2D (size: int) (arr: 'a[][]) : 'a[][][] =
 |> printfn "Part 1: %i"
 
 window2D 3 input 
-|> Array.where (fun window -> 
-    [| window |> diagonals ; window |> Array.rev |> diagonals |]
-    |> Array.collect id 
-    |> Array.filter (fun x -> Array.length x = 3) 
-    |> Array.forall mas)
-|> Array.length
+|> Array.sumBy (fun window -> 
+    [| window |> diagonals |> Array.item 2
+       window |> Array.rev |> diagonals |> Array.item 2 |]
+    |> Array.forall mas
+    |> System.Convert.ToInt32)
 |> printfn "Part 2: %i"
