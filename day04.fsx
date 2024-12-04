@@ -33,18 +33,16 @@ let window2D (size: int) (arr: 'a[][]) : 'a[][][] =
                 |]
     |]
 
-[
-    input |> Array.sumBy xmas
-    input |> Array.transpose |> Array.sumBy xmas
-    input |> diagonals |> Array.sumBy xmas
-    input |> Array.map Array.rev |> diagonals |> Array.sumBy xmas
-] 
+[ input |> Array.sumBy xmas
+  input |> Array.transpose |> Array.sumBy xmas
+  input |> diagonals |> Array.sumBy xmas
+  input |> Array.map Array.rev |> diagonals |> Array.sumBy xmas ] 
 |> List.sum 
 |> printfn "Part 1: %i"
 
 window2D 3 input 
-|> Array.where (fun f -> 
-    [|f |> diagonals ; f |> Array.rev |> diagonals |] 
+|> Array.where (fun window -> 
+    [| window |> diagonals ; window |> Array.rev |> diagonals |]
     |> Array.collect id 
     |> Array.filter (fun x -> Array.length x = 3) 
     |> Array.forall mas)
