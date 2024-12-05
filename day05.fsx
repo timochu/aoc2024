@@ -14,8 +14,7 @@ let sorter pages  =
         | [] -> pages
         | rules ->
             for (r1,r2) in rules do
-                let i1 = pages |> Array.findIndex ((=) r1)
-                let i2 = pages |> Array.findIndex ((=) r2)
+                let i1, i2 = pages |> Array.findIndex ((=) r1), pages |> Array.findIndex ((=) r2)
                 Array.set pages i2 r1
                 Array.set pages i1 r2
             swapper (hits pages) pages
