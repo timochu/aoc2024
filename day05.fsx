@@ -22,4 +22,4 @@ let sorter pages  =
     swapper (hits pages) pages
 
 updates |> Array.where (hits >> List.isEmpty) |> Array.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 1: %i"
-updates |> Array.where (hits >> Seq.isEmpty >> not) |> Array.map sorter |> Array.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 2: %i"
+updates |> Array.where (hits >> List.isEmpty >> not) |> Array.map sorter |> Array.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 2: %i"
