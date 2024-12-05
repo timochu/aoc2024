@@ -17,4 +17,4 @@ let rec swap pages =
 
 let printable, unprintable = [for l in input[1177..] -> [for i in l.Split(',') -> int i]] |> List.partition (hits >> List.isEmpty)
 printable |> List.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 1: %i"
-unprintable |> List.map (swap) |> List.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 2: %i"
+unprintable |> List.map swap |> List.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 2: %i"
