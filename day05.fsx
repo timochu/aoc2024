@@ -4,10 +4,9 @@ let updates = input |> Array.skipWhile (fun i -> i.Contains "," |> not) |> Array
 
 let hits (pages: int array) =
     pages, [ for (r1, r2) in rules do
-               match Array.contains r1 pages, Array.contains r2 pages with
-               | (true, true) when (Array.findIndex ((=) r1) pages) > (Array.findIndex ((=) r2) pages) ->
-                   yield (r1, r2)
-               | _ -> () ]
+                match Array.tryFindIndex ((=) r1) pages, Array.tryFindIndex ((=) r2) pages with
+                | Some i1, Some i2 when i1 > i2 -> yield (r1, r2)
+                | _ -> () ]
 
 let rec sorter (pages : int array) (rules : ((int*int) List)) =
     match rules |> List.randomShuffle with // secret sauce 😙🤌
