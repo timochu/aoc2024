@@ -9,15 +9,13 @@ let hits pages =
         | _ -> () ]
 
 let sorter pages  =
-    let rec swapper rules pages =
+    let rec swapper (rules : ((int*int) List)) (pages : int array) =
         match rules |> List.randomShuffle with // secret sauce 😙🤌
         | [] -> pages
-        | rules ->
-            for (r1,r2) in rules do
-                let i1, i2 = pages |> Array.findIndex ((=) r1), pages |> Array.findIndex ((=) r2)
-                Array.set pages i2 r1
-                Array.set pages i1 r2
-            swapper (hits pages) pages
+        | rules -> (pages, rules) ||> List.fold (fun acc (r1, r2) -> 
+                    let i1, i2 = acc |> Array.findIndex ((=) r1), acc |> Array.findIndex ((=) r2)
+                    acc |> Array.updateAt i1 r2 |> Array.updateAt i2 r1)
+                |> (fun p -> hits p, p) ||> swapper
     swapper (hits pages) pages
 
 updates |> Array.where (hits >> List.isEmpty) |> Array.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 1: %i"
