@@ -18,4 +18,4 @@ let rec swap pages =
 let middle (arr : 'a list) = arr.[arr.Length / 2]
 let printable, unprintable = [for l in input[1177..] -> [for i in l.Split(',') -> int i]] |> List.partition (hits >> List.isEmpty)
 printable |> List.sumBy middle |> printfn "Part 1: %i"
-unprintable |> List.sumBy(swap >> middle) |> printfn "Part 2: %i"
+unprintable |> List.sumBy (swap >> middle) |> printfn "Part 2: %i"
