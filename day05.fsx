@@ -15,6 +15,7 @@ let rec swap pages =
         | _ -> acc)
     |> fun reordered -> if List.forall2 (=) pages reordered then reordered else swap reordered
 
+let middle (arr : 'a list) = arr.[arr.Length / 2]
 let printable, unprintable = [for l in input[1177..] -> [for i in l.Split(',') -> int i]] |> List.partition (hits >> List.isEmpty)
-printable |> List.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 1: %i"
-unprintable |> List.map swap |> List.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 2: %i"
+printable |> List.sumBy middle |> printfn "Part 1: %i"
+unprintable |> List.sumBy(swap >> middle) |> printfn "Part 2: %i"
