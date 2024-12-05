@@ -7,14 +7,14 @@ let hits pages =
         | Some i1, Some i2 when i1 > i2 -> yield (r1, r2)
         | _ -> () ]
 
-let rec swapper pages =
+let rec swap pages =
     (pages, rules) 
     ||> List.fold (fun acc (r1, r2) -> 
         match (acc |> List.tryFindIndex ((=) r1), acc |> List.tryFindIndex ((=) r2)) with 
-        |Some i1, Some i2 when i1 > i2 -> acc |> List.updateAt i1 r2 |> List.updateAt i2 r1
+        | Some i1, Some i2 when i1 > i2 -> acc |> List.updateAt i1 r2 |> List.updateAt i2 r1
         | _ -> acc)
-    |> fun reordered -> if List.forall2 (=) pages reordered then reordered else swapper reordered
+    |> fun reordered -> if List.forall2 (=) pages reordered then reordered else swap reordered
 
 let printable, unprintable = [for l in input[1177..] -> [for i in l.Split(',') -> int i]] |> List.partition (hits >> List.isEmpty)
 printable |> List.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 1: %i"
-unprintable |> List.map (fun u -> swapper u) |> List.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 2: %i"
+unprintable |> List.map (swap) |> List.sumBy (fun u -> u.[u.Length / 2]) |> printfn "Part 2: %i"
