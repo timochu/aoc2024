@@ -18,14 +18,11 @@ let turn guard =
     | pos, 'v' -> pos, '<'
     | pos, _   -> pos, '^'
 
-let repetitive (acc : ((int*int) list)) =
-    if acc.Length < 5 then false else
-    acc
-    |> List.windowed 5 
-    |> List.where (fun window -> List.forall2 (=) window acc[..4]) 
-    |> List.length > 1
+let repetitive (acc : (((int * int) * char) list)) =
+    if acc.IsEmpty then false else
+    acc.Tail |> List.exists ((=) acc.Head) 
 
-let rec plot (acc : ((int * int) list)) obstacles (guard : (int * int) * char) =
+let rec plot (acc : (((int * int) * char) list)) obstacles (guard : (int * int) * char) =
     if acc |> repetitive then [] else
     match guard |> step with
     | (x,_), _ when x < 0 || x > bound -> acc
@@ -34,8 +31,8 @@ let rec plot (acc : ((int * int) list)) obstacles (guard : (int * int) * char) =
         if obstacles |> List.contains position then
             plot acc obstacles (turn guard)
         else 
-            plot (position::acc) obstacles (position, direction)
+            plot ((position, direction)::acc) obstacles (position, direction)
 
-let route = guard |> plot [] obstacles |> List.distinct
+let route = guard |> plot [] obstacles |> List.map fst |> List.distinct
 route |> List.length |> printfn "Part 1: %i"
-route |> Array.ofList |> Array.Parallel.map (fun e -> guard |> plot [] (e::obstacles)) |> Array.where List.isEmpty |> Array.length |> printfn "Part 2: %i"
+route |> Array.ofList |> Array.Parallel.map (fun (e) -> guard |> plot [] (e::obstacles)) |> Array.where List.isEmpty |> Array.length |> printfn "Part 2: %i"
