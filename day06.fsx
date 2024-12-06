@@ -27,14 +27,14 @@ let repetitive (acc : ((int*int) list)) =
 
 let rec plot (acc : ((int * int) list)) obstacles (guard : (int * int) * char) =
     if acc |> repetitive then [] else
-    match step guard with
-    | (x,_), _ when x < 0     -> acc
-    | (x,_), _ when x > bound -> acc
-    | (_,y), _ when y < 0     -> acc
-    | (_,y), _ when y > bound -> acc
-    | (pos, dir) ->
-        if obstacles |> List.contains pos then plot acc obstacles (turn guard)
-        else plot (pos::acc) obstacles (pos, dir)
+    match guard |> step with
+    | (x,_), _ when x < 0 || x > bound -> acc
+    | (_,y), _ when y < 0 || y > bound -> acc
+    | position, direction ->
+        if obstacles |> List.contains position then
+            plot acc obstacles (turn guard)
+        else 
+            plot (position::acc) obstacles (position, direction)
 
 let route = guard |> plot [] obstacles |> List.distinct
 route |> List.length |> printfn "Part 1: %i"
