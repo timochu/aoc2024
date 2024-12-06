@@ -19,13 +19,13 @@ let turn guard =
     | pos, _   -> pos, '^'
 
 let repetitive (acc : ((int*int) list)) =
-    if acc |> List.length < 5 then false else
+    if acc.Length < 5 then false else
     acc
     |> List.windowed 5 
-    |> List.where (fun w -> List.forall2 (=) w acc[..4]) 
+    |> List.where (fun window -> List.forall2 (=) window acc[..4]) 
     |> List.length > 1
 
-let rec plot (acc : ((int*int) list)) obstacles (guard : (int * int) * char) =
+let rec plot (acc : ((int * int) list)) obstacles (guard : (int * int) * char) =
     if acc |> repetitive then [] else
     match guard with
     | (x,_), _ when x < 0      -> acc
