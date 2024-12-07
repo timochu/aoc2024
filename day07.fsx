@@ -1,5 +1,5 @@
 let input = 
-    [for l in System.IO.File.ReadAllLines "day07e.txt" -> 
+    [for l in System.IO.File.ReadAllLines "day07.txt" -> 
         [for n in l.Split([|' '; ':'|], System.StringSplitOptions.RemoveEmptyEntries) -> 
             uint64 n]] 
     |> List.map (fun n -> n[0], n[1..])
