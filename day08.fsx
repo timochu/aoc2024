@@ -12,16 +12,15 @@ let rec combinations n items =
             for xs in combinations (n - 1) remainingItems do
                 yield x :: xs ]
 
-let antinodes distance = 
+let antinodes distance self = 
     frequencies 
     |> List.collect (fun frequency ->
         antennas 
-        |> List.where (fun a -> snd a = frequency)
-        |> List.map fst
+        |> List.choose (fun (c, f) -> if f = frequency then Some c else None)
         |> combinations 2
         |> List.collect (fun coords -> 
             let (x1,y1), (x2,y2) = (fst coords[0], snd coords[0]), (fst coords[1], snd coords[1])
-            let start = if distance > 1 then -1 else 1
+            let start = if self then -1 else 1
             [ for (xd, yd) in [for i in start..distance -> abs(x1 - x2) * i, abs(y1 - y2) * i] ->
                 match x1 < x2, y1 < y2 with
                 | true, true   -> x1 - xd, y1 - yd
@@ -33,6 +32,6 @@ let antinodes distance =
     |> List.distinct
     |> List.length
 
-antinodes 1  |> printfn "Part 1: %i"
-antinodes 50 |> printfn "Part 2: %i"
+antinodes 1 false |> printfn "Part 1: %i"
+antinodes 50 true |> printfn "Part 2: %i"
 
