@@ -19,8 +19,7 @@ let antinodes =
         |> List.where (fun a -> snd a = frequency)
         |> List.map fst
         |> combinations 2
-        |> List.map (fun coords -> (fst coords[0], snd coords[0]), (fst coords[1], snd coords[1])
-        )
+        |> List.map (fun coords -> (fst coords[0], snd coords[0]), (fst coords[1], snd coords[1]))
         |> List.map (fun ((x1,y1),(x2,y2)) -> 
             let xdist = abs(x1 - x2)
             let ydist = abs(y1 - y2)
@@ -29,10 +28,7 @@ let antinodes =
             | true, false  -> x1 - xdist, y1 + ydist
             | false, true  -> x1 + xdist, y1 - ydist
             | false, false -> x1 + xdist, y1 + ydist
-            
-            
-        )
-    )
+        ))
     |> List.where (fun (x,y) -> x >= 0 && y >= 0 && x <= bound && y <= bound)
     |> List.distinct
 
