@@ -12,27 +12,7 @@ let rec combinations n items =
             for xs in combinations (n - 1) remainingItems do
                 yield x :: xs ]
 
-let antinodes = 
-    frequencies 
-    |> List.collect (fun frequency ->
-        antennas 
-        |> List.where (fun a -> snd a = frequency)
-        |> List.map fst
-        |> combinations 2
-        |> List.map (fun coords -> (fst coords[0], snd coords[0]), (fst coords[1], snd coords[1]))
-        |> List.map (fun ((x1,y1),(x2,y2)) -> 
-            let xdist = abs(x1 - x2)
-            let ydist = abs(y1 - y2)
-            match x1 < x2, y1 < y2 with
-            | true, true   -> x1 - xdist, y1 - ydist
-            | true, false  -> x1 - xdist, y1 + ydist
-            | false, true  -> x1 + xdist, y1 - ydist
-            | false, false -> x1 + xdist, y1 + ydist
-        ))
-    |> List.where (fun (x,y) -> x >= 0 && y >= 0 && x <= bound && y <= bound)
-    |> List.distinct
-
-let antinodes2 = 
+let antinodes distance self = 
     frequencies 
     |> List.collect (fun frequency ->
         antennas 
@@ -41,18 +21,20 @@ let antinodes2 =
         |> combinations 2
         |> List.map (fun coords -> (fst coords[0], snd coords[0]), (fst coords[1], snd coords[1]))
         |> List.collect (fun ((x1,y1),(x2,y2)) -> 
-            [ for (xd, yd) in [for i in 1..50 -> abs(x1 - x2) * i, abs(y1 - y2) * i] ->
-              match x1 < x2, y1 < y2 with
-              | true, true   -> x1 - xd, y1 - yd
-              | true, false  -> x1 - xd, y1 + yd
-              | false, true  -> x1 + xd, y1 - yd
-              | false, false -> x1 + xd, y1 + yd ]
-            |> List.append [(x1,y1);(x2,y2)]
+            let result =
+                [ for (xd, yd) in [for i in 1..distance -> abs(x1 - x2) * i, abs(y1 - y2) * i] ->
+                  match x1 < x2, y1 < y2 with
+                  | true, true   -> x1 - xd, y1 - yd
+                  | true, false  -> x1 - xd, y1 + yd
+                  | false, true  -> x1 + xd, y1 - yd
+                  | false, false -> x1 + xd, y1 + yd ]
+            if self then result |> List.append [(x1,y1);(x2,y2)]
+            else result
         ))
     |> List.where (fun (x,y) -> x >= 0 && y >= 0 && x <= bound && y <= bound)
     |> List.distinct
 
 
-printfn "Part 1: %A" (antinodes |> List.length)
-printfn "Part 2: %A" (antinodes2 |> List.length)
+printfn "Part 1: %A" (antinodes 1 false |> List.length)
+printfn "Part 2: %A" (antinodes 50 true |> List.length)
 
