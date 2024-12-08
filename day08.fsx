@@ -32,6 +32,31 @@ let antinodes =
     |> List.where (fun (x,y) -> x >= 0 && y >= 0 && x <= bound && y <= bound)
     |> List.distinct
 
+let antinodes2 = 
+    frequencies 
+    |> List.collect (fun frequency ->
+        antennas 
+        |> List.where (fun a -> snd a = frequency)
+        |> List.map fst
+        |> combinations 2
+        |> List.map (fun coords -> (fst coords[0], snd coords[0]), (fst coords[1], snd coords[1]))
+        |> List.collect (fun ((x1,y1),(x2,y2)) -> 
+            let xdists = [for i in 1..50 -> abs(x1 - x2) * i]
+            let ydists = [for i in 1..50 -> abs(y1 - y2) * i]
+            let dists = List.zip xdists ydists
+            [   for (xd, yd) in dists ->
+                match x1 < x2, y1 < y2 with
+                | true, true   -> x1 - xd, y1 - yd
+                | true, false  -> x1 - xd, y1 + yd
+                | false, true  -> x1 + xd, y1 - yd
+                | false, false -> x1 + xd, y1 + yd
+            ]
+            |> List.append [(x1,y1);(x2,y2)]
+        ))
+    |> List.where (fun (x,y) -> x >= 0 && y >= 0 && x <= bound && y <= bound)
+    |> List.distinct
 
-printfn "Part 1: %A" (antinodes  |> List.length)
+
+printfn "Part 1: %A" (antinodes |> List.length)
+printfn "Part 2: %A" (antinodes2 |> List.length)
 
