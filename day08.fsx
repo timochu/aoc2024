@@ -33,8 +33,8 @@ let antinodes distance self =
         ))
     |> List.where (fun (x,y) -> x >= 0 && y >= 0 && x <= bound && y <= bound)
     |> List.distinct
+    |> List.length
 
-
-printfn "Part 1: %A" (antinodes 1 false |> List.length)
-printfn "Part 2: %A" (antinodes 50 true |> List.length)
+antinodes 1 false |> printfn "Part 1: %i"
+antinodes 50 true |> printfn "Part 2: %i"
 
