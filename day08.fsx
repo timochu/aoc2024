@@ -12,29 +12,27 @@ let rec combinations n items =
             for xs in combinations (n - 1) remainingItems do
                 yield x :: xs ]
 
-let antinodes distance self = 
+let antinodes distance = 
     frequencies 
     |> List.collect (fun frequency ->
         antennas 
         |> List.where (fun a -> snd a = frequency)
         |> List.map fst
         |> combinations 2
-        |> List.map (fun coords -> (fst coords[0], snd coords[0]), (fst coords[1], snd coords[1]))
-        |> List.collect (fun ((x1,y1),(x2,y2)) -> 
-            let result =
-                [ for (xd, yd) in [for i in 1..distance -> abs(x1 - x2) * i, abs(y1 - y2) * i] ->
-                  match x1 < x2, y1 < y2 with
-                  | true, true   -> x1 - xd, y1 - yd
-                  | true, false  -> x1 - xd, y1 + yd
-                  | false, true  -> x1 + xd, y1 - yd
-                  | false, false -> x1 + xd, y1 + yd ]
-            if self then result |> List.append [(x1,y1);(x2,y2)]
-            else result
+        |> List.collect (fun coords -> 
+            let (x1,y1), (x2,y2) = (fst coords[0], snd coords[0]), (fst coords[1], snd coords[1])
+            let start = if distance > 1 then -1 else 1
+            [ for (xd, yd) in [for i in start..distance -> abs(x1 - x2) * i, abs(y1 - y2) * i] ->
+                match x1 < x2, y1 < y2 with
+                | true, true   -> x1 - xd, y1 - yd
+                | true, false  -> x1 - xd, y1 + yd
+                | false, true  -> x1 + xd, y1 - yd
+                | false, false -> x1 + xd, y1 + yd ]
         ))
     |> List.where (fun (x,y) -> x >= 0 && y >= 0 && x <= bound && y <= bound)
     |> List.distinct
     |> List.length
 
-antinodes 1 false |> printfn "Part 1: %i"
-antinodes 50 true |> printfn "Part 2: %i"
+antinodes 1  |> printfn "Part 1: %i"
+antinodes 50 |> printfn "Part 2: %i"
 
